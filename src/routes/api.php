@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('notifications', 'App\Http\Controllers\DiscordNotificationController@index');
+Route::get('notifications/{id}', 'App\Http\Controllers\DiscordNotificationController@show');
+Route::post('notifications', 'App\Http\Controllers\DiscordNotificationController@store');
+Route::put('notifications/{id}', 'App\Http\Controllers\DiscordNotificationController@update');
+Route::delete('notifications/{id}', 'App\Http\Controllers\DiscordNotificationController@delete');

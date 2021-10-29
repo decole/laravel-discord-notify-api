@@ -49,14 +49,14 @@ services:
 
   phpmyadmin:
     image: phpmyadmin
-    container_name: homebee-phpmyadmin
+    container_name: php_discord-phpmyadmin
     env_file:
       - ./src/.env
     environment:
       PMA_ARBITRARY: 1
       PMA_HOST: db
       UPLOAD_LIMIT: 50M
-      PMA_PMADB: ${DB_DATABASE}
+      PMA_PMADB: discord_bot
     #    restart: always
     ports:
       - 8080:80

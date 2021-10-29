@@ -38,5 +38,8 @@ into app:
 mysql:
 	$(compose) exec db bash
 
+ps:
+	$(compose) ps
+
 tests:
 	$(app) vendor/phpunit/phpunit/phpunit
