@@ -42,3 +42,14 @@ php artisan key:generate
 ```shell script
 php artisan migrate:rollback --step=1
 ```
+
+
+### Testing
+
+> First step: migrate change db on test db (create **discord_bot_test** database) so watch ./docker-compose/mysql/init_db.sql file - for example this database created for first start mysql docker container.
+> 
+> `php artisan migrate --env=testing`
+> 
+> Second step:
+> 
+> `php artisan test`
