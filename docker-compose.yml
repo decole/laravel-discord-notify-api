@@ -4,7 +4,7 @@ services:
   nginx:
     image: nginx:alpine
     container_name: php_discord-nginx
-    restart: unless-stopped
+    restart: always
     ports:
       - 89:80
     volumes:
@@ -22,7 +22,25 @@ services:
       dockerfile: Dockerfile
     image: php_discord
     container_name: php_discord-app
-    restart: unless-stopped
+    restart: always
+    working_dir: /var/www/
+    volumes:
+      - ./src:/var/www
+      - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - php_discord
+
+  background_proccess:
+    build:
+      args:
+        user: decole
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: php_background_discord
+    container_name: background_proccess_discord-app
+    command: php artisan discord:webhook
+    restart: always
     working_dir: /var/www/
     volumes:
       - ./src:/var/www
@@ -33,7 +51,7 @@ services:
   db:
     image: mysql:5.7.31
     container_name: php_discord-db
-    restart: unless-stopped
+    restart: always
     environment:
       MYSQL_DATABASE: discord_bot
       MYSQL_ROOT_PASSWORD: homesteed
@@ -47,25 +65,25 @@ services:
     networks:
       - php_discord
 
-  phpmyadmin:
-    image: phpmyadmin
-    container_name: php_discord-phpmyadmin
-    env_file:
-      - ./src/.env
-    environment:
-      PMA_ARBITRARY: 1
-      PMA_HOST: db
-      UPLOAD_LIMIT: 50M
-      PMA_PMADB: discord_bot
-    #    restart: always
-    ports:
-      - 8080:80
-    volumes:
-      - /sessions
-    depends_on:
-      - db
-    networks:
-      - php_discord
+#  phpmyadmin:
+#    image: phpmyadmin
+#    container_name: php_discord-phpmyadmin
+#    env_file:
+#      - ./src/.env
+#    environment:
+#      PMA_ARBITRARY: 1
+#      PMA_HOST: db
+#      UPLOAD_LIMIT: 50M
+#      PMA_PMADB: discord_bot
+#    restart: always
+#    ports:
+#      - 8080:80
+#    volumes:
+#      - /sessions
+#    depends_on:
+#      - db
+#    networks:
+#      - php_discord
 
 networks:
   php_discord:
