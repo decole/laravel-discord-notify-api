@@ -22,6 +22,10 @@ class CreateDiscordNotificationsTable extends Migration
             $table->string('ip', 16)->default('none');
             $table->timestamps();
         });
+
+        Schema::table('discord_notifications', function (Blueprint $table) {
+            $table->index('sent');
+        });
     }
 
     /**
