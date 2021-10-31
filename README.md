@@ -5,11 +5,11 @@
 # build docker php container
 docker-compose build --no-cache
 
-# start service 
-make up | docker-compose up -d
+# start service or docker-compose up -d
+make up   
 
-# into app container
-make app | docker-compose exec app bash
+# into app container or docker-compose exec app bash
+make app
 
 # in app container put commands from install and migrate laravel: 
 composer install && php artisan migrate
