@@ -42,4 +42,4 @@ ps:
 	$(compose) ps
 
 tests:
-	$(app) vendor/phpunit/phpunit/phpunit
+	$(app) php artisan test
