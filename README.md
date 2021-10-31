@@ -1,6 +1,30 @@
 #Discord notify microservice
 
 ### How to install
+
+Change in docker-compose.yml some params.
+
+in docker-compose.yml find `user: decole` and fix **decole** - to your system login name.
+
+```
+args:
+  user: decole
+  uid: 1000
+```
+
+fix fo example. Your system login is **samm012** 
+in docker-compose.yml fix `user: decole` to `user: samm012` for all this cases
+
+watch:
+
+```
+args:
+  user: samm012
+  uid: 1000
+```
+
+And in console execute this:
+
 ```shell script
 # build docker php container
 docker-compose build --no-cache
