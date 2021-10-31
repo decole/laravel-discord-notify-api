@@ -13,11 +13,29 @@ make app
 
 # in app container put commands from install and migrate laravel: 
 composer install && php artisan migrate
+
+#into app container (make app) execute this command
 php artisan key:generate
+
+# migrate database changes
+php artisan migrate
+
+# migrate database changes for testing database
+php artisan migrate --env=testing
+
+# exit at container
+exit
+
+# in your console restart docker-compose 
+make restart
+
+# app is start!
 ```
 
-### Microservice web GUI 
-<localhost:89> watch gui log message transit on this microservice  
+### Microservice web GUI
+
+<localhost:89> - welcome page with microservice info   
+<localhost:89/history> - watch table log message transit on this microservice  
 
 ### How to use
 
