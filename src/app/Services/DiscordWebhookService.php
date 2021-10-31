@@ -21,33 +21,22 @@ class DiscordWebhookService
         $this->userId = env('DISCORD_USER');
     }
 
-    public function run(): void
+    public function run(bool $single = false): void
     {
         $status = true;
+
         while ($status) {
             $this->sendCollection();
 
             sleep(2);
+
+            if ($single) {
+                $status = false;
+            }
         }
     }
 
-    private function sendCollection(): void
-    {
-        $collection = $this->getNotify();
-
-        foreach ($collection as $notify) {
-            $this->send($notify);
-
-            sleep(0.3);
-        }
-    }
-
-    private function getNotify(): Collection
-    {
-        return DiscordNotification::where('sent', 0)->get();
-    }
-
-    private function send(?DiscordNotification $notify): void
+    public function send(?DiscordNotification $notify): void
     {
         $hexColor = $notify->is_priority == 1 ? 'E5534B' : 'E3D51B';
         $timestamp = date('c', strtotime('now'));
@@ -87,6 +76,22 @@ class DiscordWebhookService
         curl_close($ch);
 
         $this->changeStatus($notify);
+    }
+
+    private function sendCollection(): void
+    {
+        $collection = $this->getNotify();
+
+        foreach ($collection as $notify) {
+            $this->send($notify);
+
+            sleep(0.3);
+        }
+    }
+
+    private function getNotify(): Collection
+    {
+        return DiscordNotification::where('sent', 0)->get();
     }
 
     private function changeStatus(?DiscordNotification $notify): void
