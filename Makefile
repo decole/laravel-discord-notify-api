@@ -35,9 +35,6 @@ app-key-generate:
 into app:
 	$(compose) exec app bash
 
-mysql:
-	$(compose) exec db bash
-
 ps:
 	$(compose) ps
 
