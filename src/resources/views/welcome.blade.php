@@ -71,11 +71,12 @@
                                         <p>POST http://localhost:89/api/notifications</p>
                                         <p>
                                             body params:
+                                        </p>
                                         <ul>
                                             <li>who - name yore service</li>
                                             <li>message - notify text</li>
                                         </ul>
-                                        </p>
+
                                         <p><b>Request:</b></p>
 <pre>
 {

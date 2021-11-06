@@ -41,12 +41,6 @@ composer install && php artisan migrate
 #into app container (make app) execute this command
 php artisan key:generate
 
-# migrate database changes
-php artisan migrate
-
-# migrate database changes for testing database
-php artisan migrate --env=testing
-
 # exit at container
 exit
 
@@ -58,8 +52,7 @@ make restart
 
 ### Microservice web GUI
 
-<localhost:89> - welcome page with microservice info   
-<localhost:89/history> - watch table log message transit on this microservice  
+<localhost:89> - welcome page with microservice info
 
 ### How to use
 
@@ -77,6 +70,13 @@ Request body:
 }
 ```
 
+In .env file enter yore credentials.
+
+> DISCORD_WEBHOOK="enter yore webhook string"
+> 
+> DISCORD_USER="enter yore discord user id"
+
+
 ### Shel MAKE commands (watch Makefile file)
 
 > `make up` - it is `docker-compose up -d --remove-orphans`
@@ -91,30 +91,17 @@ Request body:
 > 
 > `make into app` - into php container
 > 
-> `mysql` - into mysql container
-> 
 > `make tests` - start unit tests
 
 You can see the full list of commands in the file itself. ( ./Makefile )
 
 
+### Testing
+use make command `make test`
 
-### Rollback migration (if this needed)
+or into app container:
 ```shell script
 make app
 
-php artisan migrate:rollback
+php artisan test
 ```
-
-
-### Testing
-
-Test database "discord_bot_test" is used for testing. First testing - in container (`make app`) use command `php artisan migrate --env=testing`
-
-> First step: migrate change db on test db (create **discord_bot_test** database) so watch ./docker-compose/mysql/init_db.sql file - for example this database created for first start mysql docker container.
-> 
-> `php artisan migrate --env=testing`
-> 
-> Second step:
-> 
-> `php artisan test`
