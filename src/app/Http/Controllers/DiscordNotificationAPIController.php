@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DiscordNotification;
+use App\Services\DiscordWebhookService;
 use Illuminate\Http\Request;
+use App\Services\Dto\NotifyDto;
 
 /**
  * 200: OK. The standard success code and default option.
@@ -17,8 +18,15 @@ use Illuminate\Http\Request;
  * 500: Internal server error. Ideally you're not going to be explicitly returning this, but if something unexpected breaks, this is what your user is going to receive.
  * 503: Service unavailable. Pretty self explanatory, but also another code that is not going to be returned explicitly by the application.
  */
-class DiscordNotificationController extends Controller
+class DiscordNotificationAPIController extends Controller
 {
+    private DiscordWebhookService $service;
+
+    public function __construct(DiscordWebhookService $service)
+    {
+        $this->service = $service;
+    }
+
     public function index()
     {
         $notification = [
@@ -30,46 +38,22 @@ class DiscordNotificationController extends Controller
         return response()->json($notification, 200);
     }
 
-    public function show($id)
+    public function send(Request $request)
     {
-        $notification = DiscordNotification::find($id);
+        $validated = $request->validate([
+            'who' => 'required|max:500',
+            'message' => 'required|max:1000',
+            'is_priority' => 'integer'
+        ]);
 
-        if (!$notification) {
-            return response()->json(['error' => 'resource not found'], 404);
-        }
+        $notify = new NotifyDto();
+        $notify->sender = $validated['who'];
+        $notify->message = $validated['message'];
+        $notify->isPriority = $validated['is_priority'] ?? 0;
+        $notify->ip = $_SERVER['HTTP_CLIENT_IP'] ?? ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR']) ?? 'none';
 
-        return response()->json($notification, 200);
-    }
+        $this->service->send($notify);
 
-    public function store(Request $request)
-    {
-        $notification = DiscordNotification::create($request->all());
-
-        $ip = $_SERVER['HTTP_CLIENT_IP'] ?? ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR']) ?? 'none';
-        $notification->ip = $ip;
-        $notification->update();
-
-        return response()->json($notification, 201);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $notification = DiscordNotification::findOrFail($id);
-        $notification->update($request->all());
-
-        return response()->json($notification, 200);
-    }
-
-    public function delete(Request $request, $id)
-    {
-        $notification = DiscordNotification::find($id);
-
-        if (!$notification) {
-            return response()->json(['error' => 'notification not found to delete'], 404);
-        }
-
-        $notification->delete();
-
-        return response()->json(null, 204);
+        return response()->json(['success' => true], 200);
     }
 }
