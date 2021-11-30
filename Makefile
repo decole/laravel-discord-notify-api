@@ -40,3 +40,6 @@ ps:
 
 tests:
 	$(app) php artisan test
+
+logs:
+	$(compose) logs
